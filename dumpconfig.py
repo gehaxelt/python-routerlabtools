@@ -9,9 +9,12 @@ import telnetlib
 import sys
 
 MAPPING = {
-	'aac-rc1': ('ts4.dmz.routerlab', 7032),
-	'aac-rj1': ('ts4.dmz.routerlab', 7029),
+        'aac-rc1': ('ts4.dmz.routerlab', 7032),
+        'aac-rj1': ('ts4.dmz.routerlab', 7029),
+        'cgn-rc1': ('ts4.dmz.routerlab', 7027),
+        'cgn-sc1': ('ts4.dmz.routerlab', 7026),
 }
+
 
 if len(sys.argv) < 3:
 	print("Usage: ./{} aac-rc1 outfile.config".format(sys.argv[0]))

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #####
 #
 # Quick & Dirty configuration dumping tool written by Sebastian Neef (@gehaxelt)
@@ -11,6 +11,18 @@ import sys
 MAPPING = {
 	'aac-rc1': ('ts4.dmz.routerlab', 7032),
 	'aac-rj1': ('ts4.dmz.routerlab', 7029),
+	'cgn-rc1': ('ts4.dmz.routerlab', 7027),
+	'cgn-sc1': ('ts4.dmz.routerlab', 7026),
+	'cgn-rj1': ('ts4.dmz.routerlab', 7024),
+	'cgn-sj1': ('ts4.dmz.routerlab', 7025),
+	'lev-rj1': ('ts4.dmz.routerlab', 7013),
+	'lev-rj2': ('ts4.dmz.routerlab', 7012),
+	'lev-sc1': ('ts4.dmz.routerlab', 7015),
+	'lev-rc1': ('ts4.dmz.routerlab', 7016),
+	'lev-sj1': ('ts4.dmz.routerlab', 7014),
+	'lan-rj2': ('ts4.dmz.routerlab', 7007),
+	'cgn-rj2': ('ts4.dmz.routerlab', 7023),
+	'lan-sc1': ('ts4.dmz.routerlab', 7010),
 }
 
 if len(sys.argv) < 3:
@@ -33,10 +45,12 @@ if "c" in device[3:]: #cisco
 	if not "! Last configuration" in config[:100]:
 		print("Config does not start with '! Last configuration'. Probably not cisco?!")
 		sys.exit(1)
+	print("this is a cisco device")
 elif "j" in device[3:]: #juniper
-	if not "## Last commit" in config[:100]:
+	if not "## " in config[:100]:
 		print("Config does not start with '##Last commit'. Probably not juniper?!")
 		sys.exit(1)
+	print("this is a juniper device")
 else:
 	print("Wrong device type.")
 	sys.exit(1)
@@ -47,7 +61,7 @@ print("[+] I read your config file. It was a good read! :=)")
 print("[*] You chose {}".format(device))
 print("[*] Connecting to {}:{}".format(*MAPPING[device]))
 tn = telnetlib.Telnet(*MAPPING[device])
-#tn.set_debuglevel(1000)
+tn.set_debuglevel(1000)
 
 tn.write("\n")
 tn.read_some()
@@ -78,6 +92,7 @@ if "c" in device[3:]: #cisco
 	tn.close()
 	sys.exit(0)		
 elif "j" in device[3:]: #juniper
+	print("waiting for the CLI interface. If the router is not in the CLI mode, please bring it into cli mode")
 	state = tn.expect(["root@.*[>#]".format(device)])
 	if ("root@".format(device) not in state[2]) and (">" not in state[2]):
 		print("[-] Failed enter CLI")
